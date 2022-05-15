@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_collage/model/collage_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../bloc/bloc/image_picker_bloc.dart';
+import '../service/pdf_creator.dart';
 
 class CreateCollageView extends StatefulWidget {
   const CreateCollageView({
@@ -17,15 +20,21 @@ class CreateCollageView extends StatefulWidget {
 }
 
 class _CreateCollageViewState extends State<CreateCollageView> {
-  List<XFile?> imageList = [];
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<CImage> imageList = [];
   ImagePickerBloc? imagePickerBloc;
+  final bool _isPdfLoaded = false;
+  File? _pdfFile;
 
   @override
   void initState() {
     super.initState();
     imagePickerBloc = context.read<ImagePickerBloc>();
-    // imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
+    setStateLocal();
   }
+
+  void setStateLocal() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -35,124 +44,150 @@ class _CreateCollageViewState extends State<CreateCollageView> {
         actions: [
           IconButton(
               onPressed: (() {
-                _showImageSourceActionSheet(context);
+                showImageSourceActionSheet(context);
               }),
               icon: const Icon(Icons.select_all))
         ],
       ),
-      body: BlocBuilder<ImagePickerBloc, ImagePickerState>(
-        builder: (context, state) {
-          if (state is ImagePickerLoadedState && state.images!.isNotEmpty) {
-            return GridView.builder(
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 150,
-                  // childAspectRatio: 3 / 2,
-                  // crossAxisSpacing: 20,
-                  // mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: state.images!.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 201, 201, 201), borderRadius: BorderRadius.circular(8)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image(
-                        image: FileImage(File(state.images![index]!.path)),
-                        fit: BoxFit.fill,
+      body: _isPdfLoaded
+          ? Center(
+              child: PdfView(path: _pdfFile!.path),
+            )
+          : BlocBuilder<ImagePickerBloc, ImagePickerState>(
+              builder: (context, state) {
+                if (state is ImagePickerLoadedState && state.images.isNotEmpty) {
+                  imageList = state.images;
+                  return GridView.builder(
+                      primary: false,
+                      padding: const EdgeInsets.all(20),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 150,
+                        // childAspectRatio: 3 / 2,
+                        // crossAxisSpacing: 20,
+                        // mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
                       ),
-                    ),
-                  );
-                });
-          } else if (state is ImagePickerLoadingState) {
-            return const Center(child: CircularProgressIndicator());
+                      itemCount: state.images.length,
+                      itemBuilder: (BuildContext ctx, index) {
+                        return Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 201, 201, 201), borderRadius: BorderRadius.circular(8)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image(
+                              image: FileImage(File(state.images[index].path)),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        );
+                      });
+                } else if (state is ImagePickerLoadingState) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return const Center(
+                  child: Text('No photos selected.'),
+                );
+              },
+            ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Create Collage'),
+        icon: const Icon(Icons.download_done_outlined),
+        onPressed: () async {
+          // final pdfCreater = CollageImageViewModel(imageList.cast<CollageImage>());
+          final PdfService pdfService = PdfService(context, imageList);
+
+          File file = await pdfService.createPdfFile();
+          if (await file.exists()) {
+            showInSnackBar();
+            // setState(() {
+            //   _isPdfLoaded = true;
+            //   _pdfFile = file;
+            // });
           }
-          return const Center(
-            child: Text('No photos selected.'),
-          );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.download_for_offline),
+        // child: const Icon(Icons.arrow_right_outlined),
       ),
     );
   }
 
-  Future<XFile?>? getImage({required ImageSource imageSource}) async {
-    final XFile? pickedImage = await ImagePicker().pickImage(source: imageSource);
-    if (pickedImage == null) return null;
+  void showInSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pdf file has been created succesfully.')));
+  }
+
+  Future<List<XFile?>>? getImage() async {
+    // final XFile? pickedImage = await ImagePicker().pickImage(source: imageSource);
+    final List<XFile>? pickedImage = await ImagePicker().pickMultiImage();
+    if (pickedImage == null) return [];
     return pickedImage;
   }
 
-  void _showImageSourceActionSheet(BuildContext context) {
+  Future<void> addImageToImageList(ImageSource imageSource) async {
+    List<XFile?>? file = await getImage();
+    imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
+    if (file != null) {
+      imageList.addAll(file.map((e) => CollageImage(e!.path)));
+
+      // imageList.add(CollageImage(file.path, imageList.length));
+      // print(imageList.length);
+      imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
+    }
+  }
+
+  void showImageSourceActionSheet(BuildContext context) {
     if (Platform.isIOS) {
       showCupertinoModalPopup(
           context: context,
           builder: (context) => CupertinoActionSheet(
-                actions: [
-                  CupertinoActionSheetAction(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        XFile? file = await getImage(imageSource: ImageSource.gallery);
-                        // addImageToImageList(file);
-                        imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
-
-                        if (file == null) return;
-                        print(file.path);
-                        imageList.add(file);
-                        print(imageList.length);
-                        imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
-                      },
-                      child: const Text('Gallery')),
-                  CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Camera'))
-                ],
+                actions: [iosGalleryActionSheet(context), iosCameraActionSheet(context)],
               ));
     } else {
       showModalBottomSheet(
           context: context,
           builder: (context) => Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.camera_alt),
-                    title: const Text('Camera'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.photo_album),
-                    title: const Text('Gallery'),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      XFile? file = await getImage(imageSource: ImageSource.gallery);
-                      imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
-                      if (file == null) return;
-                      print(file.path);
-                      imageList.add(file);
-                      print(imageList.length);
-                      imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
-                    },
-                  ),
-                ],
+                children: [androidCameraActionSheet(context), androidGalleryActionSheet(context)],
               ));
     }
   }
 
-  void addImageToImageList(XFile? file) {
-    if (file == null) return;
-    print(file.path);
-    imageList.add(file);
-    print(imageList.length);
-    imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
+  ListTile androidCameraActionSheet(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.camera_alt),
+      title: const Text('Camera'),
+      onTap: () {
+        Navigator.pop(context);
+        addImageToImageList(ImageSource.camera);
+      },
+    );
+  }
+
+  ListTile androidGalleryActionSheet(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.photo_album),
+      title: const Text('Gallery'),
+      onTap: () async {
+        Navigator.pop(context);
+        addImageToImageList(ImageSource.gallery);
+      },
+    );
+  }
+
+  CupertinoActionSheetAction iosCameraActionSheet(BuildContext context) {
+    return CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          addImageToImageList(ImageSource.camera);
+        },
+        child: const Text('Camera'));
+  }
+
+  CupertinoActionSheetAction iosGalleryActionSheet(BuildContext context) {
+    return CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          addImageToImageList(ImageSource.gallery);
+        },
+        child: const Text('Gallery'));
   }
 }

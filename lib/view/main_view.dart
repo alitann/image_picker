@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/bottom_navigation_bloc.dart';
 
-import '../bloc/bloc/image_picker_bloc.dart';
 import 'create_collage_view.dart';
 import 'list_collage_view.dart';
 
@@ -30,12 +29,7 @@ class TabBarController extends StatelessWidget {
       child: BlocBuilder<BottomNavigationBloc, int>(
         builder: (context, selectedIndex) {
           return Scaffold(
-            body: bottomNavigationBloc.state == 0
-                ? BlocProvider(
-                    create: (context) => ImagePickerBloc(),
-                    child: const CreateCollageView(),
-                  )
-                : const ListCollageView(),
+            body: bottomNavigationBloc.state == 0 ? const CreateCollageView() : const ListCollageView(),
             bottomNavigationBar: _customNavigationBar(selectedIndex, bottomNavigationBloc),
           );
         },

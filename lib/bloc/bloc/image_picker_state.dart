@@ -3,7 +3,7 @@ part of 'image_picker_bloc.dart';
 abstract class ImagePickerState extends Equatable {}
 
 class ImagePickerLoadedState extends ImagePickerState {
-  final List<XFile?>? images;
+  final List<CImage> images;
 
   ImagePickerLoadedState(this.images);
 

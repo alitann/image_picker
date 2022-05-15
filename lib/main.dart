@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/bottom_navigation_bloc.dart';
 import 'package:image_collage/view/main_view.dart';
 
+import 'bloc/bloc/image_picker_bloc.dart';
+
 void main() => runApp(const ImageCollageApp());
 
 class ImageCollageApp extends StatelessWidget {
@@ -18,9 +20,9 @@ class ImageCollageApp extends StatelessWidget {
           BlocProvider<BottomNavigationBloc>(
             create: (BuildContext context) => BottomNavigationBloc(),
           ),
-          // BlocProvider<ImagePickerBloc>(
-          //   create: (BuildContext context) => ImagePickerBloc(),
-          // ),
+          BlocProvider<ImagePickerBloc>(
+            create: (BuildContext context) => ImagePickerBloc(),
+          ),
         ],
         child: const MainView(),
       ),

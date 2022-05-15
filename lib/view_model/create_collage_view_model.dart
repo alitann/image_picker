@@ -5,6 +5,8 @@ class CreateCollageViewModel {
     try {
       XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
-    } catch (e) {}
+    } catch (e) {
+      null;
+    }
   }
 }

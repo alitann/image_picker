@@ -8,10 +8,12 @@ abstract class ImagePickerEvent extends Equatable {
 }
 
 class MutlipleSelectImageEvent extends ImagePickerEvent {
-  final List<XFile?> images;
+  final List<CImage> images;
   const MutlipleSelectImageEvent({
     required this.images,
   });
 }
 
 class MutlipleSelectImageLoadingEvent extends ImagePickerEvent {}
+
+class MutlipleSelectImageReloadEvent extends ImagePickerEvent {}
