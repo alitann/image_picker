@@ -21,8 +21,6 @@ class CreateCollageView extends StatefulWidget {
 }
 
 class _CreateCollageViewState extends State<CreateCollageView> {
-  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   List<CImage> imageList = [];
   ImagePickerBloc? imagePickerBloc;
   BottomNavigationBloc? bottomNavigationBloc;
@@ -49,7 +47,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
               onPressed: (() {
                 showImageSourceActionSheet(context);
               }),
-              icon: const Icon(Icons.select_all))
+              icon: const Icon(Icons.add_photo_alternate_outlined))
         ],
       ),
       body: _isPdfLoaded
@@ -119,7 +117,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   }
 
   Future<List<XFile?>>? getImage() async {
-    // final XFile? pickedImage = await ImagePicker().pickImage(source: imageSource);
     final List<XFile>? pickedImage = await ImagePicker().pickMultiImage();
     if (pickedImage == null) return [];
     return pickedImage;

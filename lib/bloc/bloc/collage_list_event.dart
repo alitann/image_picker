@@ -8,3 +8,9 @@ abstract class CollageListEvent extends Equatable {
 }
 
 class CollageListLoadEvent extends CollageListEvent {}
+
+class CollageListDeleteEvent extends CollageListEvent {
+  final File file;
+
+  const CollageListDeleteEvent(this.file);
+}

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/collage_list_bloc.dart';
@@ -14,11 +16,12 @@ class ListCollageView extends StatefulWidget {
 }
 
 class _ListCollageViewState extends State<ListCollageView> {
+  CollageListBloc? collageListBloc;
   @override
   void initState() {
     super.initState();
-    CollageListBloc collageListBloc = context.read<CollageListBloc>();
-    collageListBloc.add(CollageListLoadEvent());
+    collageListBloc = context.read<CollageListBloc>();
+    collageListBloc?.add(CollageListLoadEvent());
   }
 
   @override
@@ -37,8 +40,8 @@ class _ListCollageViewState extends State<ListCollageView> {
               return ListView.builder(
                   itemCount: state.imagePdfFiles.length,
                   itemBuilder: (context, index) {
-                    final imageFile = state.imagePdfFiles[index];
-                    final title = imageFile.path.split('/').last.toString();
+                    final pdfFile = state.imagePdfFiles[index];
+                    final title = pdfFile.path.split('/').last.toString();
                     return ListTile(
                       // leading: const Icon(Icons.list),
                       trailing: Row(
@@ -48,21 +51,26 @@ class _ListCollageViewState extends State<ListCollageView> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => PdfViewerView(title: title, pdfFile: imageFile)),
+                                MaterialPageRoute(builder: (context) => PdfViewerView(title: title, pdfFile: pdfFile)),
                               );
                             },
                             child: const Icon(Icons.slideshow_outlined),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 20),
                           InkWell(
                               child: const Icon(Icons.share_outlined),
                               onTap: () async {
-                                Share.shareFiles([imageFile.path], text: 'My Image Collage Pdf File');
+                                Share.shareFiles([pdfFile.path], text: 'My Image Collage Pdf File');
+                              }),
+                          const SizedBox(width: 20),
+                          InkWell(
+                              child: const Icon(Icons.delete_forever_outlined),
+                              onTap: () async {
+                                _showConfirmationDialog(pdfFile, context);
                               })
                         ],
                       ),
-                      title: Text('My Collages ${index + 1}'),
+                      title: Text('My Collages ${title.substring(0, title.length - 7)}'),
                       subtitle: Text(title),
                     );
                   });
@@ -73,6 +81,41 @@ class _ListCollageViewState extends State<ListCollageView> {
           },
         ),
       ),
+    );
+  }
+
+  Future<void> _showConfirmationDialog(File pdfFile, BuildContext contextMain) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete File'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: const <Widget>[
+                // Text('Delete File'),
+                Text('Are you sure you want to delete this file?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                collageListBloc?.add(CollageListDeleteEvent(pdfFile));
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

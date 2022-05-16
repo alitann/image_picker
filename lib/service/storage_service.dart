@@ -7,7 +7,8 @@ abstract class AStorageService {
   Future<File> getLocalFile(String fileName);
   Future<String> readData(String fileName);
   Future<File> writeData(String data, String fileName);
-  List<FileSystemEntity> getLocalFileList({String folderName});
+  List<FileSystemEntity> getLocalFileList();
+  Future<int> deleteFile(File file);
 }
 
 class StorageService extends AStorageService {
@@ -41,8 +42,18 @@ class StorageService extends AStorageService {
   }
 
   @override
-  List<FileSystemEntity> getLocalFileList({String folderName = "pdf"}) {
+  List<FileSystemEntity> getLocalFileList() {
     List<FileSystemEntity> localFileList = Directory('$localPath').listSync();
     return localFileList;
+  }
+
+  @override
+  Future<int> deleteFile(File file) async {
+    try {
+      await file.delete();
+      return 1;
+    } catch (e) {
+      return 0;
+    }
   }
 }
