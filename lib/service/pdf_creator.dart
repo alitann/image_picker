@@ -19,7 +19,8 @@ class PdfService {
     this.imageList,
   );
 
-  Future<File> createPdfFile() async {
+  Future<File?> createPdfFile() async {
+    if (imageList.isEmpty) return null;
     final pdf = pw.Document();
 
     DateTime now = DateTime.now();

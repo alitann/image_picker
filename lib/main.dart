@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_collage/bloc/bloc/bottom_navigation_bloc.dart';
-import 'package:image_collage/view/main_view.dart';
+import 'package:image_collage/service/storage_service.dart';
 
+import 'bloc/bloc/bottom_navigation_bloc.dart';
+import 'bloc/bloc/collage_list_bloc.dart';
 import 'bloc/bloc/image_picker_bloc.dart';
+import 'view/main_view.dart';
 
 void main() => runApp(const ImageCollageApp());
 
@@ -13,7 +15,7 @@ class ImageCollageApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: 'Image Collage',
       debugShowCheckedModeBanner: false,
       home: MultiBlocProvider(
         providers: [
@@ -23,20 +25,12 @@ class ImageCollageApp extends StatelessWidget {
           BlocProvider<ImagePickerBloc>(
             create: (BuildContext context) => ImagePickerBloc(),
           ),
+          BlocProvider<CollageListBloc>(
+            create: (BuildContext context) => CollageListBloc(StorageService())..add(CollageListLoadEvent()),
+          ),
         ],
         child: const MainView(),
       ),
-
-      // MultiBlocProvider(providers: [
-      //   BlocProvider(
-      //     create: (context) => BottomNavigationBloc(),
-      //     child: const MainView(),
-      //   ),
-      //   BlocProvider(
-      //     create: (context) => ImagePickerBloc(),
-      //     child: const MainView(),
-      //   ),
-      // ], child: child),
     );
   }
 }

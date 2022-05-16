@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_collage/model/collage_image.dart';
+import 'package:image_collage/bloc/bloc/bottom_navigation_bloc.dart';
+import '../model/collage_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
@@ -24,17 +25,19 @@ class _CreateCollageViewState extends State<CreateCollageView> {
 
   List<CImage> imageList = [];
   ImagePickerBloc? imagePickerBloc;
+  BottomNavigationBloc? bottomNavigationBloc;
   final bool _isPdfLoaded = false;
   File? _pdfFile;
 
   @override
   void initState() {
     super.initState();
-    imagePickerBloc = context.read<ImagePickerBloc>();
-    setStateLocal();
+    imagePickerBloc = BlocProvider.of<ImagePickerBloc>(context); //context.read<ImagePickerBloc>();
+    bottomNavigationBloc = context.read<BottomNavigationBloc>();
+    // setStateLocal();
   }
 
-  void setStateLocal() => setState(() {});
+  // void setStateLocal() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -98,13 +101,12 @@ class _CreateCollageViewState extends State<CreateCollageView> {
           // final pdfCreater = CollageImageViewModel(imageList.cast<CollageImage>());
           final PdfService pdfService = PdfService(context, imageList);
 
-          File file = await pdfService.createPdfFile();
-          if (await file.exists()) {
-            showInSnackBar();
-            // setState(() {
-            //   _isPdfLoaded = true;
-            //   _pdfFile = file;
-            // });
+          File? file = await pdfService.createPdfFile();
+          if (file != null) {
+            showSnackBar('Pdf file has been created succesfully.');
+            bottomNavigationBloc?.add(TabBarChangeEvent(1));
+          } else {
+            showSnackBar('Pdf file has not been created. Please select at least 1 image.');
           }
         },
         // child: const Icon(Icons.arrow_right_outlined),
@@ -112,8 +114,8 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     );
   }
 
-  void showInSnackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pdf file has been created succesfully.')));
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   Future<List<XFile?>>? getImage() async {
