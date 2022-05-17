@@ -6,7 +6,7 @@ part 'image_picker_event.dart';
 part 'image_picker_state.dart';
 
 class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
-  ImagePickerBloc() : super(ImagePickerLoadedState(const [])) {
+  ImagePickerBloc() : super(ImagePickerInitialState()) {
     on<MutlipleSelectImageEvent>((event, emit) {
       emit(ImagePickerLoadedState(event.images));
     });
@@ -15,6 +15,8 @@ class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
       emit(ImagePickerLoadingState());
     });
 
-    on<MutlipleSelectImageReloadEvent>((event, emit) {});
+    on<MutlipleSelectImageResetEvent>((event, emit) {
+      emit(ImagePickerInitialState());
+    });
   }
 }

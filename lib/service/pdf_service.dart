@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:image_collage/model/collage_image.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -8,19 +9,19 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../extensions/context_extension.dart';
-import '../model/collage_image.dart';
 
-class PdfService {
-  final BuildContext contextMain;
-  final List<CImage> imageList;
+abstract class APdfService {
+  Future<File?> createPdfFile(BuildContext contextMain, List<CImage> selectedImages);
+  Future<void> showPdf(File file);
+}
 
-  PdfService(
-    this.contextMain,
-    this.imageList,
-  );
+class PdfService extends APdfService {
+  late List<CImage> imageList;
 
-  Future<File?> createPdfFile() async {
-    if (imageList.isEmpty) return null;
+  @override
+  Future<File?> createPdfFile(BuildContext contextMain, List<CImage> selectedImages) async {
+    imageList = selectedImages;
+
     final pdf = pw.Document();
 
     DateTime now = DateTime.now();
@@ -132,6 +133,7 @@ class PdfService {
     }
   }
 
+  @override
   Future<void> showPdf(File file) async {
     PdfView(path: file.path);
   }

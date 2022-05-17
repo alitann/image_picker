@@ -16,4 +16,4 @@ class MutlipleSelectImageEvent extends ImagePickerEvent {
 
 class MutlipleSelectImageLoadingEvent extends ImagePickerEvent {}
 
-class MutlipleSelectImageReloadEvent extends ImagePickerEvent {}
+class MutlipleSelectImageResetEvent extends ImagePickerEvent {}

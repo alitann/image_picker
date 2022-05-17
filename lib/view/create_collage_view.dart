@@ -4,12 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/bottom_navigation_bloc.dart';
+import 'package:image_collage/bloc/bloc/pdf_file_bloc.dart';
 import '../model/collage_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../bloc/bloc/image_picker_bloc.dart';
-import '../service/pdf_creator.dart';
 
 class CreateCollageView extends StatefulWidget {
   const CreateCollageView({
@@ -24,18 +23,15 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   List<CImage> imageList = [];
   ImagePickerBloc? imagePickerBloc;
   BottomNavigationBloc? bottomNavigationBloc;
-  final bool _isPdfLoaded = false;
-  File? _pdfFile;
+  PdfFileBloc? pdfFileBloc;
 
   @override
   void initState() {
     super.initState();
     imagePickerBloc = BlocProvider.of<ImagePickerBloc>(context); //context.read<ImagePickerBloc>();
     bottomNavigationBloc = context.read<BottomNavigationBloc>();
-    // setStateLocal();
+    pdfFileBloc = context.read<PdfFileBloc>();
   }
-
-  // void setStateLocal() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +41,44 @@ class _CreateCollageViewState extends State<CreateCollageView> {
         actions: [
           IconButton(
               onPressed: (() {
+                pdfFileBloc?.add(PdfFileResetRequest());
                 showImageSourceActionSheet(context);
               }),
               icon: const Icon(Icons.add_photo_alternate_outlined))
         ],
       ),
-      body: _isPdfLoaded
-          ? Center(
-              child: PdfView(path: _pdfFile!.path),
-            )
-          : BlocBuilder<ImagePickerBloc, ImagePickerState>(
+      body: BlocBuilder<PdfFileBloc, PdfFileState>(
+        builder: (context, pdfState) {
+          if (pdfState is PdfFileCreated) {
+            return Center(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    bottomNavigationBloc?.add(TabBarChangeEvent(1));
+                    imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+                    pdfFileBloc?.add(PdfFileResetRequest());
+                  },
+                  child: const Text('Show Pdf File'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+                    pdfFileBloc?.add(PdfFileResetRequest());
+                    imageList = [];
+                  },
+                  child: const Text('Reset Page'),
+                ),
+              ],
+            ));
+          } else if (pdfState is PdfFileError) {
+            return Center(
+              child: Text(pdfState.errorMessage),
+            );
+          } else {
+            return BlocBuilder<ImagePickerBloc, ImagePickerState>(
               builder: (context, state) {
                 if (state is ImagePickerLoadedState && state.images.isNotEmpty) {
                   imageList = state.images;
@@ -91,21 +115,18 @@ class _CreateCollageViewState extends State<CreateCollageView> {
                   child: Text('No photos selected.'),
                 );
               },
-            ),
+            );
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton.extended(
         label: const Text('Create Collage'),
         icon: const Icon(Icons.download_done_outlined),
         onPressed: () async {
           // final pdfCreater = CollageImageViewModel(imageList.cast<CollageImage>());
-          final PdfService pdfService = PdfService(context, imageList);
-
-          File? file = await pdfService.createPdfFile();
-          if (file != null) {
-            showSnackBar('Pdf file has been created succesfully.');
-            bottomNavigationBloc?.add(TabBarChangeEvent(1));
-          } else {
-            showSnackBar('Pdf file has not been created. Please select at least 1 image.');
-          }
+          // final PdfService pdfService = PdfService();
+          // File? file = await pdfService.createPdfFile(context, imageList);
+          BlocProvider.of<PdfFileBloc>(context).add(PdfFileCreateRequest(imageList, context));
         },
         // child: const Icon(Icons.arrow_right_outlined),
       ),
@@ -116,22 +137,38 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
-  Future<List<XFile?>>? getImage() async {
+  Future<List<XFile?>>? getImageFromGallery() async {
     final List<XFile>? pickedImage = await ImagePicker().pickMultiImage();
     if (pickedImage == null) return [];
     return pickedImage;
   }
 
-  Future<void> addImageToImageList(ImageSource imageSource) async {
-    List<XFile?>? file = await getImage();
-    imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
-    if (file != null) {
-      imageList.addAll(file.map((e) => CollageImage(e!.path)));
+  Future<XFile?> getImageFromCamera() async {
+    final XFile? pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    return pickedImage;
+  }
 
-      // imageList.add(CollageImage(file.path, imageList.length));
-      // print(imageList.length);
-      imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
+  Future<void> addImageToImageList(ImageSource imageSource) async {
+    List<XFile?>? fileList;
+    XFile? file;
+
+    imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
+
+    if (imageSource == ImageSource.camera) {
+      file = await getImageFromCamera();
+      if (file != null) {
+        imageList.add(CollageImage(file.path));
+      } else {
+        imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+      }
+    } else {
+      fileList = await getImageFromGallery();
+      imageList.addAll(fileList!.map((e) => CollageImage(e!.path)));
     }
+
+    // imageList.add(CollageImage(file.path, imageList.length));
+    // print(imageList.length);
+    imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
   }
 
   void showImageSourceActionSheet(BuildContext context) {
