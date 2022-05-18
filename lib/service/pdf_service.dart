@@ -28,9 +28,6 @@ class PdfService extends APdfService {
     String currentDate = DateFormat('dd.MM.yyyy HH:mm:ss').format(now);
 
     final double imageWidth = (contextMain.width - contextMain.lowValue) / 2;
-    // final double deviceHeight = contextMain.height;
-    // final double highValue = contextMain.highValue;
-    // final double deviceWidth = contextMain.width;
 
     final double imageHeight = (contextMain.height - (contextMain.highValue * 2)) / 2;
     final double pageCount = imageList.length % 4 == 0 ? imageList.length / 4 : imageList.length ~/ 4 + 1;
@@ -45,8 +42,6 @@ class PdfService extends APdfService {
     var filePath = '$appDocPath/$currentDate.pdf';
     final file = File(filePath);
     await file.writeAsBytes(await pdf.save());
-    // await OpenDocument.openDocument(filePath: filePath);
-    // showPdf(file);
     return file;
   }
 
@@ -66,16 +61,10 @@ class PdfService extends APdfService {
   }
 
   pw.Column _buildPdfColumn(double imageWidth, double imageHeight, BuildContext contextMain, int pageNumber) {
-    return pw.Column(
-        // mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-        // mainAxisSize: pw.MainAxisSize.max,
-        children: [
-          // _buildPdfRow(image, imageWidth, imageHeight, contextMain),
-          // pw.SizedBox(height: 20),
-          // _buildPdfRow(image, imageWidth, imageHeight, contextMain),
-          ...getColumnWidgetContent(
-              pageNumber: pageNumber, imageWidth: imageWidth, imageHeight: imageHeight, contextMain: contextMain)
-        ]);
+    return pw.Column(children: [
+      ...getColumnWidgetContent(
+          pageNumber: pageNumber, imageWidth: imageWidth, imageHeight: imageHeight, contextMain: contextMain)
+    ]);
   }
 
   List<pw.Widget> getColumnWidgetContent(
@@ -109,12 +98,7 @@ class PdfService extends APdfService {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
       mainAxisSize: pw.MainAxisSize.min,
-      children: [
-        // _buildPdfImage(image, imageWidth, imageHeight),
-        // pw.SizedBox(width: contextMain.lowValue),
-        // _buildPdfImage(image, imageWidth, imageHeight),
-        ...getRowWidgetContent(pageNumber, columnIndex, imageWidth, imageHeight, contextMain)
-      ],
+      children: [...getRowWidgetContent(pageNumber, columnIndex, imageWidth, imageHeight, contextMain)],
     );
   }
 

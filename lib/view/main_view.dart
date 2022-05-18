@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_collage/constants/application_constants.dart';
 import '../bloc/bloc/bottom_navigation_bloc.dart';
 
 import 'create_collage_view.dart';
@@ -42,8 +43,8 @@ class TabBarController extends StatelessWidget {
       currentIndex: selectedIndex,
       onTap: (index) => bottomNavigationBloc.add(TabBarChangeEvent(index)),
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.add_to_photos_outlined), label: 'Create'),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined), label: 'My Files'),
+        BottomNavigationBarItem(icon: Icon(Icons.add_to_photos_outlined), label: ApplicationConstants.create),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined), label: ApplicationConstants.myFiles),
       ],
     );
   }

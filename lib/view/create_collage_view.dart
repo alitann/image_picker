@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/bottom_navigation_bloc.dart';
 import 'package:image_collage/bloc/bloc/pdf_file_bloc.dart';
+import 'package:image_collage/constants/application_constants.dart';
 import '../model/collage_image.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -37,7 +38,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Collage'),
+        title: const Text(ApplicationConstants.createCollage),
         actions: [
           IconButton(
               onPressed: (() {
@@ -60,7 +61,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
                     imagePickerBloc?.add(MutlipleSelectImageResetEvent());
                     pdfFileBloc?.add(PdfFileResetRequest());
                   },
-                  child: const Text('Show Pdf File'),
+                  child: const Text(ApplicationConstants.showPdfFile),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
@@ -69,7 +70,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
                     pdfFileBloc?.add(PdfFileResetRequest());
                     imageList = [];
                   },
-                  child: const Text('Reset Page'),
+                  child: const Text(ApplicationConstants.newCollage),
                 ),
               ],
             ));
@@ -87,9 +88,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
                       padding: const EdgeInsets.all(20),
                       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 150,
-                        // childAspectRatio: 3 / 2,
-                        // crossAxisSpacing: 20,
-                        // mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),
@@ -112,7 +110,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 return const Center(
-                  child: Text('No photos selected.'),
+                  child: Text(ApplicationConstants.noSelectedPhotos),
                 );
               },
             );
@@ -120,15 +118,11 @@ class _CreateCollageViewState extends State<CreateCollageView> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Create Collage'),
+        label: const Text(ApplicationConstants.createCollage),
         icon: const Icon(Icons.download_done_outlined),
         onPressed: () async {
-          // final pdfCreater = CollageImageViewModel(imageList.cast<CollageImage>());
-          // final PdfService pdfService = PdfService();
-          // File? file = await pdfService.createPdfFile(context, imageList);
           BlocProvider.of<PdfFileBloc>(context).add(PdfFileCreateRequest(imageList, context));
         },
-        // child: const Icon(Icons.arrow_right_outlined),
       ),
     );
   }
@@ -166,8 +160,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
       imageList.addAll(fileList!.map((e) => CollageImage(e!.path)));
     }
 
-    // imageList.add(CollageImage(file.path, imageList.length));
-    // print(imageList.length);
     imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
   }
 
@@ -190,7 +182,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   ListTile androidCameraActionSheet(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.camera_alt),
-      title: const Text('Camera'),
+      title: const Text(ApplicationConstants.camera),
       onTap: () {
         Navigator.pop(context);
         addImageToImageList(ImageSource.camera);
@@ -201,7 +193,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   ListTile androidGalleryActionSheet(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.photo_album),
-      title: const Text('Gallery'),
+      title: const Text(ApplicationConstants.gallery),
       onTap: () async {
         Navigator.pop(context);
         addImageToImageList(ImageSource.gallery);
@@ -215,7 +207,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
           Navigator.pop(context);
           addImageToImageList(ImageSource.camera);
         },
-        child: const Text('Camera'));
+        child: const Text(ApplicationConstants.camera));
   }
 
   CupertinoActionSheetAction iosGalleryActionSheet(BuildContext context) {
@@ -224,6 +216,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
           Navigator.pop(context);
           addImageToImageList(ImageSource.gallery);
         },
-        child: const Text('Gallery'));
+        child: const Text(ApplicationConstants.gallery));
   }
 }

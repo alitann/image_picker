@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/collage_list_bloc.dart';
+import 'package:image_collage/constants/application_constants.dart';
 import 'package:image_collage/view/pdf_viewer.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -28,7 +29,7 @@ class _ListCollageViewState extends State<ListCollageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Collage List'),
+        title: const Text(ApplicationConstants.collageList),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -60,7 +61,7 @@ class _ListCollageViewState extends State<ListCollageView> {
                           InkWell(
                               child: const Icon(Icons.share_outlined),
                               onTap: () async {
-                                Share.shareFiles([pdfFile.path], text: 'My Image Collage Pdf File');
+                                Share.shareFiles([pdfFile.path], text: ApplicationConstants.shareDescription);
                               }),
                           const SizedBox(width: 20),
                           InkWell(
@@ -70,7 +71,7 @@ class _ListCollageViewState extends State<ListCollageView> {
                               })
                         ],
                       ),
-                      title: Text('My Collages ${title.substring(0, title.length - 7)}'),
+                      title: Text('$ApplicationConstants.myCollage ${title.substring(0, title.length - 7)}'),
                       subtitle: Text(title),
                     );
                   });
@@ -90,25 +91,24 @@ class _ListCollageViewState extends State<ListCollageView> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete File'),
+          title: const Text(ApplicationConstants.deleteFile),
           content: SingleChildScrollView(
             child: Column(
               children: const <Widget>[
-                // Text('Delete File'),
-                Text('Are you sure you want to delete this file?'),
+                Text(ApplicationConstants.deleteConfirmationDescription),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Confirm'),
+              child: const Text(ApplicationConstants.confirm),
               onPressed: () {
                 collageListBloc?.add(CollageListDeleteEvent(pdfFile));
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text(ApplicationConstants.cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },

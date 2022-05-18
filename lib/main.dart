@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/bloc/bloc/pdf_file_bloc.dart';
 import 'package:image_collage/bloc/image_collage_observer.dart';
+import 'package:image_collage/constants/application_constants.dart';
 import 'package:image_collage/repository/pdf_repository.dart';
 import 'package:image_collage/repository/storage_repository.dart';
 import 'package:image_collage/service/pdf_service.dart';
@@ -25,7 +26,7 @@ class ImageCollageApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Image Collage',
+      title: ApplicationConstants.applicationTitle,
       debugShowCheckedModeBanner: false,
       home: MultiBlocProvider(
         providers: [
