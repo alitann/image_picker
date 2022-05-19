@@ -71,7 +71,7 @@ class _ListCollageViewState extends State<ListCollageView> {
                               })
                         ],
                       ),
-                      title: Text('$ApplicationConstants.myCollage ${title.substring(0, title.length - 7)}'),
+                      title: Text('${ApplicationConstants.myCollage} ${title.substring(0, title.length - 7)}'),
                       subtitle: Text(title),
                     );
                   });

@@ -9,7 +9,7 @@ part 'collage_list_event.dart';
 part 'collage_list_state.dart';
 
 class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
-  final AStorageRepository storageRepository;
+  final IStorageRepository storageRepository;
 
   CollageListBloc(this.storageRepository) : super(CollageListInitial()) {
     on<CollageListLoadEvent>((event, emit) async {
@@ -37,12 +37,13 @@ class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
   }
 
   Future<List<File>> getFileList() async {
-    List<File> collageImageList;
+    List<File> collagePdfList;
 
     final directory = await getApplicationDocumentsDirectory();
     List<FileSystemEntity> localFileList = Directory(directory.path).listSync();
 
-    collageImageList = localFileList.whereType<File>().toList();
-    return collageImageList;
+    collagePdfList = localFileList.whereType<File>().toList();
+    collagePdfList.sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
+    return collagePdfList;
   }
 }

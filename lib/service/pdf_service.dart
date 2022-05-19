@@ -10,12 +10,13 @@ import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../extensions/context_extension.dart';
 
-abstract class APdfService {
+abstract class IPdfService {
   Future<File?> createPdfFile(BuildContext contextMain, List<CImage> selectedImages);
   Future<void> showPdf(File file);
 }
 
-class PdfService extends APdfService {
+class PdfService extends IPdfService {
+// class PdfService {
   late List<CImage> imageList;
 
   @override

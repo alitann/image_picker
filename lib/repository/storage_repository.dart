@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:image_collage/service/storage_service.dart';
 
-abstract class AStorageRepository {
+abstract class IStorageRepository {
   Future<String> get localPath;
   Future<File> getLocalFile(String fileName);
   Future<String> readData(String fileName);
@@ -11,8 +11,8 @@ abstract class AStorageRepository {
   Future<int> deleteFile(File file);
 }
 
-class StorageRepository extends AStorageRepository {
-  final AStorageService _storageService;
+class StorageRepository extends IStorageRepository {
+  final IStorageService _storageService;
 
   StorageRepository(this._storageService);
 

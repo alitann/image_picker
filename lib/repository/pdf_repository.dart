@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:image_collage/model/collage_image.dart';
 import 'package:image_collage/service/pdf_service.dart';
 
-abstract class APdfRepository {
+abstract class IPdfRepository {
+  final PdfService pdfService;
+
+  IPdfRepository(this.pdfService);
   Future<File?> createPdfFile(BuildContext contextMain, List<CImage> imageList);
   Future<void> showPdf(File file);
 }
 
-class PdfRepository extends APdfRepository {
-  final APdfService pdfService;
-
-  PdfRepository(this.pdfService);
+class PdfRepository extends IPdfRepository {
+  PdfRepository(super.pdfService);
 
   @override
   Future<File?> createPdfFile(BuildContext contextMain, List<CImage> imageList) async {

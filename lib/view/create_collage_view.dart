@@ -151,13 +151,13 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     if (imageSource == ImageSource.camera) {
       file = await getImageFromCamera();
       if (file != null) {
-        imageList.add(CollageImage(file.path));
+        imageList.add(CollageImage(path: file.path));
       } else {
         imagePickerBloc?.add(MutlipleSelectImageResetEvent());
       }
     } else {
       fileList = await getImageFromGallery();
-      imageList.addAll(fileList!.map((e) => CollageImage(e!.path)));
+      imageList.addAll(fileList!.map((e) => CollageImage(path: e!.path)));
     }
 
     imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));

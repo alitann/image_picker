@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-abstract class AStorageService {
+abstract class IStorageService {
   Future<String> get localPath;
   Future<File> getLocalFile(String fileName);
   Future<String> readData(String fileName);
@@ -11,7 +11,7 @@ abstract class AStorageService {
   Future<int> deleteFile(File file);
 }
 
-class StorageService extends AStorageService {
+class StorageService extends IStorageService {
   @override
   Future<String> get localPath async {
     final directory = await getApplicationDocumentsDirectory();

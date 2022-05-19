@@ -43,6 +43,8 @@ dependencies:
   pdf_viewer_plugin: ^2.0.1
   intl: ^0.17.0
   share_plus: ^4.0.4
+  mocktail: ^0.3.0
+  bloc_test: ^9.0.3
 
   
 dev_dependencies:
