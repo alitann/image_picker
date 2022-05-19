@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_collage/core/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../bloc/bloc/bottom_navigation_bloc.dart';
@@ -161,13 +162,22 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     );
   }
 
-  IconButton _buildAppBarAcitons(BuildContext context) {
-    return IconButton(
-        onPressed: (() {
-          pdfFileBloc?.add(PdfFileResetRequest());
-          showImageSourceActionSheet(context);
-        }),
-        icon: const Icon(Icons.add_photo_alternate_outlined));
+  Widget _buildAppBarAcitons(BuildContext context) {
+    return BlocConsumer<PdfFileBloc, PdfFileState>(
+      listener: (context, state) {
+        if (state is PdfFileCreated) {
+          CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileCreatedInfoMessage);
+        }
+      },
+      builder: (context, state) {
+        return IconButton(
+            onPressed: (() {
+              pdfFileBloc?.add(PdfFileResetRequest());
+              showImageSourceActionSheet(context);
+            }),
+            icon: const Icon(Icons.add_photo_alternate_outlined));
+      },
+    );
   }
 
   Future<List<XFile?>>? getImageFromGallery() async {
