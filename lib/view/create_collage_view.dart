@@ -82,6 +82,8 @@ class _CreateCollageViewState extends State<CreateCollageView> {
           return handleImageLoadedState(state);
         } else if (state is ImagePickerLoadingState) {
           return handleImageLoadingState();
+        } else if (state is ImagePickerErrorState) {
+          return handleImagePickerErrorState(state);
         }
         return handleImageInitialState();
       },
@@ -126,6 +128,12 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   Center handlePdfFileErrorState(PdfFileError pdfState) {
     return Center(
       child: Text(pdfState.errorMessage),
+    );
+  }
+
+  Center handleImagePickerErrorState(ImagePickerErrorState imagePickerState) {
+    return Center(
+      child: Text(imagePickerState.errorMessage),
     );
   }
 
@@ -218,8 +226,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   }
 
   void showImageSourceActionSheet(BuildContext context) {
-    imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
-
     if (Platform.isIOS) {
       showCupertinoModalPopup(
           context: context,
@@ -240,6 +246,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
       leading: const Icon(Icons.camera_alt),
       title: const Text(ApplicationConstants.camera),
       onTap: () {
+        _setImageLoadingState();
         Navigator.pop(context);
         addImageToImageList(ImageSource.camera);
       },
@@ -251,6 +258,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
       leading: const Icon(Icons.photo_album),
       title: const Text(ApplicationConstants.gallery),
       onTap: () async {
+        _setImageLoadingState();
         Navigator.pop(context);
         addImageToImageList(ImageSource.gallery);
       },
@@ -260,6 +268,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   CupertinoActionSheetAction iosCameraActionSheet(BuildContext context) {
     return CupertinoActionSheetAction(
         onPressed: () {
+          _setImageLoadingState();
           Navigator.pop(context);
           addImageToImageList(ImageSource.camera);
         },
@@ -269,9 +278,15 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   CupertinoActionSheetAction iosGalleryActionSheet(BuildContext context) {
     return CupertinoActionSheetAction(
         onPressed: () {
+          _setImageLoadingState();
+
           Navigator.pop(context);
           addImageToImageList(ImageSource.gallery);
         },
         child: const Text(ApplicationConstants.gallery));
+  }
+
+  void _setImageLoadingState() {
+    imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
   }
 }

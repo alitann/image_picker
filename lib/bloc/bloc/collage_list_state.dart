@@ -11,6 +11,8 @@ class CollageListInitial extends CollageListState {}
 
 class CollageListLoading extends CollageListState {}
 
+class CollageListDeleted extends CollageListState {}
+
 class CollageListLoaded extends CollageListState {
   final List<File> imagePdfFiles;
   const CollageListLoaded({required this.imagePdfFiles});

@@ -18,4 +18,5 @@ class ApplicationConstants {
   static const String minImageError = 'Please select 1 image at least';
   static const String blocTestError = 'Pdf could not be created.';
   static const String pdfFileCreatedInfoMessage = 'Collage pdf file has been created.';
+  static const String pdfFileDeletedInfoMessage = 'Collage pdf file has been deleted.';
 }

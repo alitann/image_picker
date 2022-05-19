@@ -9,7 +9,11 @@ part 'image_picker_state.dart';
 class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
   ImagePickerBloc() : super(ImagePickerInitialState()) {
     on<MutlipleSelectImageEvent>((event, emit) {
-      emit(ImagePickerLoadedState(event.images));
+      try {
+        emit(ImagePickerLoadedState(event.images));
+      } catch (e) {
+        emit(ImagePickerErrorState(e.toString()));
+      }
     });
 
     on<MutlipleSelectImageLoadingEvent>((event, emit) {

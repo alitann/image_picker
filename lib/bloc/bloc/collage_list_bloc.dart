@@ -29,6 +29,7 @@ class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
         int result = await storageRepository.deleteFile(event.file);
 
         if (result == 1) {
+          emit(CollageListDeleted());
           emit(CollageListLoaded(imagePdfFiles: await getFileList()));
         }
       } catch (e) {

@@ -16,3 +16,9 @@ class ImagePickerLoadedState extends ImagePickerState {
 class ImagePickerLoadingState extends ImagePickerState {}
 
 class ImagePickerInitialState extends ImagePickerState {}
+
+class ImagePickerErrorState extends ImagePickerState {
+  final String errorMessage;
+
+  ImagePickerErrorState(this.errorMessage);
+}

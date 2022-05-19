@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_collage/core/snackbar.dart';
 import '../bloc/bloc/collage_list_bloc.dart';
 import '../constants/application_constants.dart';
 import 'pdf_viewer.dart';
@@ -28,59 +29,93 @@ class _ListCollageViewState extends State<ListCollageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(ApplicationConstants.collageList),
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+    );
+  }
+
+  Padding _buildBody() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: BlocBuilder<CollageListBloc, CollageListState>(
+        builder: (context, state) {
+          if (state is CollageListLoading) {
+            return _handleCollageListLoading();
+          } else if (state is CollageListLoaded) {
+            return _buildListView(state);
+          }
+
+          return _doNothing();
+        },
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: BlocBuilder<CollageListBloc, CollageListState>(
-          builder: (context, state) {
-            if (state is CollageListLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is CollageListLoaded) {
-              return ListView.builder(
-                  itemCount: state.imagePdfFiles.length,
-                  itemBuilder: (context, index) {
-                    final pdfFile = state.imagePdfFiles[index];
-                    final title = pdfFile.path.split('/').last.toString();
-                    return ListTile(
-                      // leading: const Icon(Icons.list),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => PdfViewerView(title: title, pdfFile: pdfFile)),
-                              );
-                            },
-                            child: const Icon(Icons.slideshow_outlined),
-                          ),
-                          const SizedBox(width: 20),
-                          InkWell(
-                              child: const Icon(Icons.share_outlined),
-                              onTap: () async {
-                                Share.shareFiles([pdfFile.path], text: ApplicationConstants.shareDescription);
-                              }),
-                          const SizedBox(width: 20),
-                          InkWell(
-                              child: const Icon(Icons.delete_forever_outlined),
-                              onTap: () async {
-                                _showConfirmationDialog(pdfFile, context);
-                              })
-                        ],
-                      ),
-                      title: Text('${ApplicationConstants.myCollage} ${title.substring(0, title.length - 7)}'),
-                      subtitle: Text(title),
-                    );
-                  });
-            } else if (state is CollageListError) {
-              return Center(child: Text(state.errorMessage.toString()));
-            }
-            return const SizedBox.shrink();
+    );
+  }
+
+  SizedBox _doNothing() => const SizedBox.shrink();
+
+  Center _handleCollageListLoading() => const Center(child: CircularProgressIndicator());
+
+  ListView _buildListView(CollageListLoaded state) {
+    return ListView.builder(
+        itemCount: state.imagePdfFiles.length,
+        itemBuilder: (context, index) {
+          final pdfFile = state.imagePdfFiles[index];
+          final title = pdfFile.path.split('/').last.toString();
+          return _buildListTile(context, title, pdfFile);
+        });
+  }
+
+  ListTile _buildListTile(BuildContext context, String title, File pdfFile) {
+    return ListTile(
+      // leading: const Icon(Icons.list),
+      trailing: _buildListTileTrailing(context, title, pdfFile),
+      title: Text('${ApplicationConstants.myCollage} ${title.substring(0, title.length - 7)}'),
+      subtitle: Text(title),
+    );
+  }
+
+  Row _buildListTileTrailing(BuildContext context, String title, File pdfFile) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PdfViewerView(title: title, pdfFile: pdfFile)),
+            );
           },
+          child: const Icon(Icons.slideshow_outlined),
         ),
+        const SizedBox(width: 20),
+        InkWell(
+            child: const Icon(Icons.share_outlined),
+            onTap: () async {
+              Share.shareFiles([pdfFile.path], text: ApplicationConstants.shareDescription);
+            }),
+        const SizedBox(width: 20),
+        InkWell(
+            child: const Icon(Icons.delete_forever_outlined),
+            onTap: () async {
+              _showConfirmationDialog(pdfFile, context);
+            })
+      ],
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: BlocConsumer<CollageListBloc, CollageListState>(
+        listener: (context, state) {
+          if (state is CollageListDeleted) {
+            CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileDeletedInfoMessage);
+          } else if (state is CollageListError) {
+            CommonSnackbar.buildSnackbar(context, state.errorMessage.toString());
+          }
+        },
+        builder: (context, state) {
+          return const Text(ApplicationConstants.collageList);
+        },
       ),
     );
   }
