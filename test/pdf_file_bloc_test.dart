@@ -19,7 +19,7 @@ class MockPdfService extends Mock implements IPdfService {}
 class MockBuildContext extends Mock implements BuildContext {}
 
 void main() {
-  final Future<File> file = Future.value(File('path'));
+  final File file = File('path');
   // final File file2 = File('path');
   List<CImage> imageList = [CollageImage(path: 'path')];
 

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_collage/bloc/bloc/collage_list_bloc.dart';
-import 'package:image_collage/constants/application_constants.dart';
-import 'package:image_collage/view/pdf_viewer.dart';
+import '../bloc/bloc/collage_list_bloc.dart';
+import '../constants/application_constants.dart';
+import 'pdf_viewer.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ListCollageView extends StatefulWidget {

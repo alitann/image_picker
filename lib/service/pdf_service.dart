@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:image_collage/model/collage_image.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -9,10 +8,11 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../extensions/context_extension.dart';
+import '../model/collage_image.dart';
 
 abstract class IPdfService {
   Future<File?> createPdfFile(BuildContext contextMain, List<CImage> selectedImages);
-  Future<void> showPdf(File file);
+  void showPdf(File file);
 }
 
 class PdfService extends IPdfService {
@@ -105,7 +105,7 @@ class PdfService extends IPdfService {
 
   pw.Image? _buildPdfImage(int pageNumber, int rowIndex, int columnIndex, double imageWidth, double imageHeight) {
     int imageOrderOnPage = columnIndex == 2 ? columnIndex + rowIndex : rowIndex;
-    int imageOrder = pageNumber == 1 ? imageOrderOnPage : imageOrderOnPage + 4;
+    int imageOrder = pageNumber == 1 ? imageOrderOnPage : imageOrderOnPage + 4 * (pageNumber - 1);
 
     if (imageOrder > imageList.length) {
       return null;
@@ -119,7 +119,7 @@ class PdfService extends IPdfService {
   }
 
   @override
-  Future<void> showPdf(File file) async {
+  void showPdf(File file) {
     PdfView(path: file.path);
   }
 }

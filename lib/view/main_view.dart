@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_collage/constants/application_constants.dart';
+import '../constants/application_constants.dart';
 import '../bloc/bloc/bottom_navigation_bloc.dart';
 
 import 'create_collage_view.dart';

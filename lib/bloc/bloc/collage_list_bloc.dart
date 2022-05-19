@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_collage/repository/storage_repository.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../../repository/storage_repository.dart';
 
 part 'collage_list_event.dart';
 part 'collage_list_state.dart';

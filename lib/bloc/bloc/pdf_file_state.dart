@@ -12,7 +12,7 @@ class PdfFileInitial extends PdfFileState {}
 class PdfFileLoading extends PdfFileState {}
 
 class PdfFileCreated extends PdfFileState {
-  final Future<File?> pdfFile;
+  final File? pdfFile;
 
   const PdfFileCreated(this.pdfFile);
 }

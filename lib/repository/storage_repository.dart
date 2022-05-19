@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:image_collage/service/storage_service.dart';
+import '../service/storage_service.dart';
 
 abstract class IStorageRepository {
   Future<String> get localPath;
