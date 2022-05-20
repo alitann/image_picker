@@ -81,8 +81,11 @@ void main() {
   blocTest<PdfFileBloc, PdfFileState>(
     'emits [PdfFileLoading,PdfFileError] when PdfFileCreateRequest button pressed',
     build: () => PdfFileBloc(mockPdfRepository),
-    act: (bloc) => bloc.add(PdfFileCreateRequest(imageList, mockContext)),
-    expect: () => <PdfFileState>[PdfFileLoading()],
+    act: ((bloc) {
+      when(() => mockPdfService.createPdfFile(mockContext, imageList)).thenAnswer((invocation) async => file);
+      bloc.add(PdfFileCreateRequest(imageList, mockContext));
+    }),
+    expect: () => <PdfFileState>[PdfFileLoading(), PdfFileCreated(file)],
   );
 
   blocTest<PdfFileBloc, PdfFileState>(
