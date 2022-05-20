@@ -163,63 +163,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     );
   }
 
-  // GridView handleImageLoadedState(ImagePickerLoadedState state) {
-  // return GridView.builder(
-  //     primary: false,
-  //     padding: const EdgeInsets.all(20),
-  //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-  //       maxCrossAxisExtent: 150,
-  //       crossAxisSpacing: 10,
-  //       mainAxisSpacing: 10,
-  //     ),
-  //     itemCount: state.images.length,
-  //     itemBuilder: (BuildContext ctx, index) {
-  //       return ClipRRect(
-  //         borderRadius: BorderRadius.circular(8.0),
-  //         child: Image(
-  //           image: FileImage(File(state.images[index].path)),
-  //           fit: BoxFit.cover,
-  //         ),
-  //       );
-  //     });
-  // }
-
-  // Widget handleImageLoadedState(ImagePickerLoadedState state) {
-  //   return DragAndDropGridView(
-  //       controller: _scrollController,
-  //       primary: false,
-  //       padding: const EdgeInsets.all(20),
-  //       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-  //         maxCrossAxisExtent: 150,
-  //         crossAxisSpacing: 10,
-  //         mainAxisSpacing: 10,
-  //       ),
-  //       itemCount: state.images.length,
-  //       itemBuilder: (BuildContext ctx, index) {
-  //         return Container(
-  //           alignment: Alignment.center,
-  //           decoration:
-  //               BoxDecoration(color: const Color.fromARGB(255, 201, 201, 201), borderRadius: BorderRadius.circular(8)),
-  //           child: ClipRRect(
-  //             borderRadius: BorderRadius.circular(8.0),
-  //             child: Image(
-  //               image: FileImage(File(state.images[index].path)),
-  //               fit: BoxFit.fill,
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //       onReorder: (oldIndex, newIndex) {
-  //         final tempImage = imageList[newIndex];
-  //         imageList[newIndex] = imageList[oldIndex];
-  //         imageList[oldIndex] = tempImage;
-  //         imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
-  //       },
-  //       onWillAccept: (oldIndex, newIndex) {
-  //         return true;
-  //       });
-  // }
-
   Center handlePdfFileErrorState(PdfFileError pdfState) {
     return Center(
       child: Text(pdfState.errorMessage),
