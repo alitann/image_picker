@@ -6,16 +6,16 @@ import '../model/collage_image.dart';
 import '../service/pdf_service.dart';
 
 abstract class IPdfRepository {
-  final PdfService pdfService;
+  final IPdfService pdfService;
 
   IPdfRepository(this.pdfService);
+
   Future<File?> createPdfFile(BuildContext contextMain, List<CImage> imageList);
   void showPdf(File file);
 }
 
 class PdfRepository extends IPdfRepository {
   PdfRepository(super.pdfService);
-
   @override
   Future<File?> createPdfFile(BuildContext contextMain, List<CImage> imageList) async {
     return await pdfService.createPdfFile(contextMain, imageList);

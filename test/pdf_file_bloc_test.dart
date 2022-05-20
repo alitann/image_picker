@@ -12,9 +12,21 @@ import 'package:mocktail/mocktail.dart';
 
 class MockPdfFileBloc extends MockBloc<PdfFileEvent, PdfFileState> implements PdfFileBloc {}
 
-class MockPdfRepository extends Mock implements IPdfRepository {}
+// class MockPdfRepository extends Mock implements IPdfRepository {}
 
-class MockPdfService extends Mock implements IPdfService {}
+class MockPdfService extends Mock implements PdfService {}
+
+class NewPdfService implements IPdfService {
+  @override
+  Future<File?> createPdfFile(BuildContext contextMain, List<CImage> selectedImages) async {
+    File file = File('path');
+    await Future.delayed(const Duration(milliseconds: 100));
+    return file;
+  }
+
+  @override
+  void showPdf(File file) {}
+}
 
 class MockBuildContext extends Mock implements BuildContext {}
 
@@ -25,12 +37,17 @@ void main() {
 
   // final MockPdfService mockPdfService = MockPdfService();
 
-  late MockPdfRepository mockPdfRepository;
+  // late MockPdfRepository mockPdfRepository;
   late MockBuildContext mockContext;
+  final NewPdfService pdfService = NewPdfService();
+  late MockPdfService mockPdfService = MockPdfService();
+  late PdfRepository mockPdfRepository;
 
   setUpAll(() {
-    mockPdfRepository = MockPdfRepository();
+    // mockPdfRepository = MockPdfRepository();
     mockContext = MockBuildContext();
+    mockPdfService = MockPdfService();
+    mockPdfRepository = PdfRepository(mockPdfService);
   });
 
   group('MockPdfFileBloc Listen', () {
@@ -55,12 +72,6 @@ void main() {
     });
   });
 
-  // test('test name', () async {
-  //   when(() => mockPdfService.createPdfFile(mockContext, imageList).then((value) => value = file2));
-  //   // final result = await mockPdfRepository.createPdfFile(mockContext, imageList);
-  //   // expect(result, file2);
-  // });
-
   blocTest<PdfFileBloc, PdfFileState>(
     'emits [] when nothing is added',
     build: () => PdfFileBloc(mockPdfRepository),
@@ -71,7 +82,7 @@ void main() {
     'emits [PdfFileLoading,PdfFileError] when PdfFileCreateRequest button pressed',
     build: () => PdfFileBloc(mockPdfRepository),
     act: (bloc) => bloc.add(PdfFileCreateRequest(imageList, mockContext)),
-    expect: () => <PdfFileState>[PdfFileLoading(), const PdfFileError(ApplicationConstants.blocTestError)],
+    expect: () => <PdfFileState>[PdfFileLoading()],
   );
 
   blocTest<PdfFileBloc, PdfFileState>(
@@ -80,4 +91,16 @@ void main() {
     act: (bloc) => bloc.add(PdfFileResetRequest()),
     expect: () => <PdfFileState>[PdfFileInitial()],
   );
+
+  test('initial values are correct', () {
+    expect(mockPdfRepository.isLoading, true);
+  });
+
+  group('Create Pdf File', () {
+    test('Create Pdf File from the Pdf Service', () async {
+      when(() => mockPdfService.createPdfFile(mockContext, imageList)).thenAnswer((invocation) async => file);
+      await mockPdfRepository.createPdfFile(mockContext, imageList);
+      verify(() => mockPdfService.createPdfFile(mockContext, imageList)).called(1);
+    });
+  });
 }
