@@ -45,6 +45,7 @@ dependencies:
   share_plus: ^4.0.4
   mocktail: ^0.3.0
   bloc_test: ^9.0.3
+  reorderable_grid_view: ^2.2.2
 
   
 dev_dependencies:

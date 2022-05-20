@@ -17,3 +17,9 @@ class MutlipleSelectImageEvent extends ImagePickerEvent {
 class MutlipleSelectImageLoadingEvent extends ImagePickerEvent {}
 
 class MutlipleSelectImageResetEvent extends ImagePickerEvent {}
+
+class ImagePickerSetQualityEvent extends ImagePickerEvent {
+  final int imageQuality;
+
+  const ImagePickerSetQualityEvent(this.imageQuality);
+}

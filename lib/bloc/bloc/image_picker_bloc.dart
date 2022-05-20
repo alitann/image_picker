@@ -23,5 +23,9 @@ class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
     on<MutlipleSelectImageResetEvent>((event, emit) {
       emit(ImagePickerInitialState());
     });
+
+    on<ImagePickerSetQualityEvent>((event, emit) {
+      emit(ImagePickerQualityState(event.imageQuality));
+    });
   }
 }

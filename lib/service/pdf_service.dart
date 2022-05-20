@@ -49,6 +49,7 @@ class PdfService extends IPdfService {
   pw.Page _buildPdfPageHeader(double imageWidth, double imageHeight, BuildContext contextMain, int pageNumber) {
     return pw.Page(
         pageFormat: PdfPageFormat.a4,
+        orientation: pw.PageOrientation.portrait,
         clip: false,
         build: (pw.Context context) {
           return _buildPage(imageWidth, imageHeight, contextMain, pageNumber);
