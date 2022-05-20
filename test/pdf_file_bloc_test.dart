@@ -92,9 +92,9 @@ void main() {
     expect: () => <PdfFileState>[PdfFileInitial()],
   );
 
-  test('initial values are correct', () {
-    expect(mockPdfRepository.isLoading, true);
-  });
+  // test('initial values are correct', () {
+  //   expect(mockPdfRepository.isLoading, true);
+  // });
 
   group('Create Pdf File', () {
     test('Create Pdf File from the Pdf Service', () async {
