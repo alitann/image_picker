@@ -107,7 +107,7 @@ void main() {
     test('Return file from the Storage Service', () async {
       when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
       await mockStorageService.getLocalFileList();
-      verify(() => mockStorageService.getLocalFileList()).called(1);
+      verify(() => mockStorageService.getLocalFileList()).called(3);
     });
   });
 }

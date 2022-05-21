@@ -33,7 +33,10 @@ The application has property of
 
 ## Setup 
 
-- Download code 
+- Download code and run 
 - Run this code for downloading packages on pubspec.yaml 
   * flutter pub get 
   * flutter run 
+
+- Run test code
+  * flutter test test/
