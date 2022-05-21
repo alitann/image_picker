@@ -31,12 +31,10 @@ The application has property of
 - Deleting existing pdf files on the application storage.   
 - Using bloc and repository pattern.
 
-## Setup 
-
-- Download code and run 
-- Run this code for downloading packages on pubspec.yaml 
-  * flutter pub get 
-  * flutter run 
-
+## Setup
+- Download code and run
+- Run this code for downloading packages on pubspec.yaml
+  * flutter pub get
+  * flutter run
 - Run test code
   * flutter test test/
