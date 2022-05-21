@@ -8,15 +8,16 @@ Also we are going to use repository pattern for testable and easily maintaible c
 
 ## Screenshots
 
-<br><img src="https://github.com/alitann/image_picker/screenshots/1.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/2.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/3.jpg" alt="">
 
-<br><img src="https://github.com/alitann/image_picker/screenshots/4.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/5.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/6.jpg" alt="">
+<br><img src="https://github.com/alitann/image_picker/blob/main/screenshots/1.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/2.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/3.png" alt="">
 
-<br><img src="https://github.com/alitann/image_picker/screenshots/7.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/8.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/9.jpg" alt="">
+<br><img src="https://github.com/alitann/image_picker/blob/main/screenshots/4.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/5.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/6.png" alt="">
 
-<br><img src="https://github.com/alitann/image_picker/screenshots/10.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/11.jpg" alt="">                    <img src="https://github.com/alitann/image_picker/screenshots/12.jpg" alt="">
+<br><img src="https://github.com/alitann/image_picker/blob/main/screenshots/7.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/8.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/9.png" alt="">
 
-git ## Description
+<br><img src="https://github.com/alitann/image_picker/blob/main/screenshots/10.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/11.png" alt="">                    <img src="https://github.com/alitann/image_picker/blob/main/screenshots/12.png" alt="">
+
+## Description
 
 The application has property of 
 
