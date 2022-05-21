@@ -5,7 +5,7 @@ class ApplicationConstants {
   static const String createCollage = 'Create Collage';
   static const String showPdfFile = 'Show Pdf File(s)';
   static const String newCollage = 'New Collage';
-  static const String noSelectedPhotos = 'No photos selected.';
+  static const String noSelectedPhotos = 'No photos selected yet.';
   static const String camera = 'Camera';
   static const String gallery = 'Gallery';
   static const String collageList = 'Collage List';
