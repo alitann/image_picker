@@ -1,6 +1,5 @@
 class CollageImage extends CImage {
-  CollageImage({required super.path, this.orderNumber = -1});
-  final int? orderNumber;
+  CollageImage({required super.path});
 }
 
 abstract class CImage {

@@ -7,16 +7,16 @@ abstract class ImagePickerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class MutlipleSelectImageEvent extends ImagePickerEvent {
+class ImagePickerSelectEvent extends ImagePickerEvent {
   final List<CImage> images;
-  const MutlipleSelectImageEvent({
+  const ImagePickerSelectEvent({
     required this.images,
   });
 }
 
-class MutlipleSelectImageLoadingEvent extends ImagePickerEvent {}
+class ImagePickerLoadingEvent extends ImagePickerEvent {}
 
-class MutlipleSelectImageResetEvent extends ImagePickerEvent {}
+class ImagePickerResetEvent extends ImagePickerEvent {}
 
 class ImagePickerSetQualityEvent extends ImagePickerEvent {
   final int imageQuality;

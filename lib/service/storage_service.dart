@@ -7,7 +7,7 @@ abstract class IStorageService {
   Future<File> getLocalFile(String fileName);
   Future<String> readData(String fileName);
   Future<File> writeData(String data, String fileName);
-  List<FileSystemEntity> getLocalFileList();
+  Future<List<File>> getLocalFileList();
   Future<int> deleteFile(File file);
 }
 
@@ -42,9 +42,17 @@ class StorageService extends IStorageService {
   }
 
   @override
-  List<FileSystemEntity> getLocalFileList() {
-    List<FileSystemEntity> localFileList = Directory('$localPath').listSync();
-    return localFileList;
+  Future<List<File>> getLocalFileList() async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    List<FileSystemEntity> localFileList = Directory(directory.path).listSync();
+
+    // Future.delayed(const Duration(milliseconds: 1));
+    List<File> collagePdfList;
+    collagePdfList = localFileList.whereType<File>().toList();
+
+    collagePdfList.sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
+    return await Future.value(collagePdfList);
   }
 
   @override

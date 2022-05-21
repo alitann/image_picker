@@ -17,7 +17,7 @@ class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
       try {
         emit(CollageListLoading());
 
-        emit(CollageListLoaded(imagePdfFiles: await getFileList()));
+        emit(CollageListLoaded(imagePdfFiles: await storageRepository.getLocalFileList()));
       } catch (e) {
         emit(CollageListError(e.toString()));
       }
@@ -30,7 +30,7 @@ class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
 
         if (result == 1) {
           emit(CollageListDeleted());
-          emit(CollageListLoaded(imagePdfFiles: await getFileList()));
+          emit(CollageListLoaded(imagePdfFiles: await storageRepository.getLocalFileList()));
         }
       } catch (e) {
         emit(CollageListError(e.toString()));

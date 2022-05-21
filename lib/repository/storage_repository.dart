@@ -7,7 +7,7 @@ abstract class IStorageRepository {
   Future<File> getLocalFile(String fileName);
   Future<String> readData(String fileName);
   Future<File> writeData(String data, String fileName);
-  List<FileSystemEntity> getLocalFileList();
+  Future<List<File>> getLocalFileList();
   Future<int> deleteFile(File file);
 }
 
@@ -27,8 +27,9 @@ class StorageRepository extends IStorageRepository {
   }
 
   @override
-  List<FileSystemEntity> getLocalFileList() {
-    return _storageService.getLocalFileList();
+  Future<List<File>> getLocalFileList() async {
+    // await Future.delayed(const Duration(milliseconds: 1));
+    return await Future.value(_storageService.getLocalFileList());
   }
 
   @override

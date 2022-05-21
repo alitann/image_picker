@@ -90,7 +90,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
           return handleImagePickerErrorState(state);
         } else if (state is ImagePickerQualityState) {
           imageQuality = state.imageQuality;
-          imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+          imagePickerBloc?.add(ImagePickerResetEvent());
         }
 
         return handleImageInitialState();
@@ -103,7 +103,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Image Quality'),
+          const Text(ApplicationConstants.imageQualityTitle),
           Slider(
               label: (imageQuality ~/ 1).toString(),
               value: imageQuality.toDouble(),
@@ -184,7 +184,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
           onPressed: () {
             pdfFileBloc?.add(PdfFileResetRequest());
             bottomNavigationBloc?.add(TabBarChangeEvent(1));
-            imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+            imagePickerBloc?.add(ImagePickerResetEvent());
           },
           child: const Text(ApplicationConstants.showPdfFile),
         ),
@@ -200,7 +200,7 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   }
 
   void _resetView() {
-    imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+    imagePickerBloc?.add(ImagePickerResetEvent());
     pdfFileBloc?.add(PdfFileResetRequest());
     imageList = [];
   }
@@ -263,16 +263,16 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   Future<void> handleGetImageFromGallery(List<XFile?>? fileList) async {
     fileList = await getImageFromGallery();
     imageList.addAll(fileList!.map((e) => CollageImage(path: e!.path)));
-    imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
+    imagePickerBloc?.add(ImagePickerSelectEvent(images: imageList));
   }
 
   Future<void> handleGetImageFromCamera(XFile? file) async {
     file = await getImageFromCamera();
     if (file != null) {
       imageList.add(CollageImage(path: file.path));
-      imagePickerBloc?.add(MutlipleSelectImageEvent(images: imageList));
+      imagePickerBloc?.add(ImagePickerSelectEvent(images: imageList));
     } else {
-      imagePickerBloc?.add(MutlipleSelectImageResetEvent());
+      imagePickerBloc?.add(ImagePickerResetEvent());
     }
   }
 
@@ -338,6 +338,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   }
 
   void _setImageLoadingState() {
-    imagePickerBloc?.add(MutlipleSelectImageLoadingEvent());
+    imagePickerBloc?.add(ImagePickerLoadingEvent());
   }
 }
