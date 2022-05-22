@@ -27,9 +27,8 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   ImagePickerBloc? imagePickerBloc;
   BottomNavigationBloc? bottomNavigationBloc;
   PdfFileBloc? pdfFileBloc;
+  static const int imgQuality = 100;
   int imageQuality = 100;
-
-  final data = [1, 2, 3, 4, 5];
 
   @override
   void initState() {
@@ -101,19 +100,29 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   Center handleImageInitialState() {
     return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(ApplicationConstants.imageQualityTitle),
-          Slider(
-              label: (imageQuality ~/ 1).toString(),
-              value: imageQuality.toDouble(),
-              divisions: 10,
-              max: 100.0,
-              min: 0.0,
-              onChanged: (val) {
-                imageQuality = val.toInt();
-                imagePickerBloc?.add(ImagePickerSetQualityEvent((imageQuality ~/ 1)));
-              }),
+          Container(
+            margin: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(3.0),
+            decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+            child: Column(
+              children: [
+                const Text(ApplicationConstants.imageQualityTitle),
+                Slider(
+                    label: (imageQuality ~/ 1).toString(),
+                    value: imageQuality.toDouble(),
+                    divisions: 10,
+                    max: 100.0,
+                    min: 0.0,
+                    onChanged: (val) {
+                      imageQuality = val.toInt();
+                      imagePickerBloc?.add(ImagePickerSetQualityEvent((imageQuality ~/ 1)));
+                    }),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
           const Text(ApplicationConstants.noSelectedPhotos),
         ],
@@ -126,8 +135,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
 
   Widget handleImageLoadedState(ImagePickerLoadedState state) {
     return Center(
-      // use ReorderableGridView.count() when version >= 2.0.0
-      // else use ReorderableGridView()
       child: ReorderableGridView.count(
         padding: const EdgeInsets.all(20),
         addSemanticIndexes: true,
@@ -199,8 +206,10 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   }
 
   void _resetView() {
-    imagePickerBloc?.add(ImagePickerResetEvent());
     pdfFileBloc?.add(PdfFileResetRequest());
+    imagePickerBloc?.add(const ImagePickerSetQualityEvent((imgQuality)));
+    // imagePickerBloc?.add(ImagePickerResetEvent());
+
     imageList = [];
   }
 

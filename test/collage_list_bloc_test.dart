@@ -12,36 +12,6 @@ class MockCollageListBloc extends MockBloc<CollageListEvent, CollageListState> i
 
 class MockStorageService extends Mock implements StorageService {}
 
-class NewStoraService implements IStorageService {
-  @override
-  Future<int> deleteFile(File file) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<File> getLocalFile(String fileName) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<File>> getLocalFileList() async {
-    return [File('path1'), File('path2')];
-  }
-
-  @override
-  Future<String> get localPath => throw UnimplementedError();
-
-  @override
-  Future<String> readData(String fileName) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<File> writeData(String data, String fileName) {
-    throw UnimplementedError();
-  }
-}
-
 void main() {
   final List<File> imagePdfFiles = [File('path1'), File('path2')];
   final File file = File('path1');
@@ -87,10 +57,7 @@ void main() {
   blocTest<CollageListBloc, CollageListState>(
     'emits [PdfFileInitial] when PdfFileResetRequest button pressed',
     build: () => CollageListBloc(mockStorageRepository),
-    act: ((bloc) {
-      // when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
-      // bloc.add(CollageListLoadEvent());
-    }),
+    act: ((bloc) => MockCollageListBloc()),
     expect: () => <CollageListState>[],
   );
 
@@ -130,7 +97,6 @@ void main() {
     act: ((bloc) {
       when(() => mockStorageService.deleteFile(file)).thenAnswer((invocation) async => 0);
       bloc.add(CollageListDeleteEvent(file));
-      // when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
     }),
     expect: () =>
         <CollageListState>[CollageListLoading(), const CollageListError(ApplicationConstants.deleteFileError)],

@@ -67,7 +67,6 @@ class _ListCollageViewState extends State<ListCollageView> {
 
   ListTile _buildListTile(BuildContext context, String title, File pdfFile) {
     return ListTile(
-      // leading: const Icon(Icons.list),
       trailing: _buildListTileTrailing(context, title, pdfFile),
       title: Text('${ApplicationConstants.myCollage} ${title.substring(0, title.length - 7)}'),
       subtitle: Text(title),

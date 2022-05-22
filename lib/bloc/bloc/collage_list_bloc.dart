@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_collage/constants/application_constants.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../repository/storage_repository.dart';
 
@@ -33,22 +32,11 @@ class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
           emit(CollageListDeleted());
           emit(CollageListLoaded(imagePdfFiles: await storageRepository.getLocalFileList()));
         } else {
-          emit(CollageListError(ApplicationConstants.deleteFileError.toString()));
+          emit(const CollageListError(ApplicationConstants.deleteFileError));
         }
       } catch (e) {
         emit(CollageListError(e.toString()));
       }
     });
-  }
-
-  Future<List<File>> getFileList() async {
-    List<File> collagePdfList;
-
-    final directory = await getApplicationDocumentsDirectory();
-    List<FileSystemEntity> localFileList = Directory(directory.path).listSync();
-
-    collagePdfList = localFileList.whereType<File>().toList();
-    collagePdfList.sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
-    return collagePdfList;
   }
 }

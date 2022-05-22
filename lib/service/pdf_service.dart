@@ -16,7 +16,6 @@ abstract class IPdfService {
 }
 
 class PdfService extends IPdfService {
-// class PdfService {
   late List<CImage> imageList;
 
   @override

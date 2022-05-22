@@ -22,7 +22,6 @@ class TabBarController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //read navigationBloc and set a variable
     final bottomNavigationBloc = context.read<BottomNavigationBloc>();
 
     return DefaultTabController(

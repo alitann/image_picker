@@ -28,7 +28,6 @@ class StorageRepository extends IStorageRepository {
 
   @override
   Future<List<File>> getLocalFileList() async {
-    // await Future.delayed(const Duration(milliseconds: 1));
     return await Future.value(_storageService.getLocalFileList());
   }
 
