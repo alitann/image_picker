@@ -37,11 +37,14 @@ class ImageCollageApp extends StatelessWidget {
             create: (BuildContext context) => ImagePickerBloc(),
           ),
           BlocProvider<CollageListBloc>(
-            create: (BuildContext context) =>
-                CollageListBloc(StorageRepository(StorageService()))..add(CollageListLoadEvent()),
+            create: (BuildContext context) => CollageListBloc(
+              StorageRepository(StorageService()),
+            ),
           ),
           BlocProvider<PdfFileBloc>(
-            create: (BuildContext context) => PdfFileBloc(PdfRepository(PdfService())),
+            create: (BuildContext context) => PdfFileBloc(
+              PdfRepository(PdfService()),
+            ),
           ),
         ],
         child: const MainView(),
