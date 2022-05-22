@@ -44,6 +44,7 @@ class NewStoraService implements IStorageService {
 
 void main() {
   final List<File> imagePdfFiles = [File('path1'), File('path2')];
+  final File file = File('path1');
 
   late MockStorageService mockStorageService = MockStorageService();
   late StorageRepository mockStorageRepository;
@@ -87,11 +88,19 @@ void main() {
     'emits [PdfFileInitial] when PdfFileResetRequest button pressed',
     build: () => CollageListBloc(mockStorageRepository),
     act: ((bloc) {
-      when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
-      bloc.add(CollageListLoadEvent());
+      // when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
+      // bloc.add(CollageListLoadEvent());
     }),
-    expect: () => <CollageListState>[CollageListLoading(), CollageListLoaded(imagePdfFiles: imagePdfFiles)],
+    expect: () => <CollageListState>[],
   );
+
+  group('Return file', () {
+    test('Return file from the Storage Service', () async {
+      when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
+      await mockStorageService.getLocalFileList();
+      verify(() => mockStorageService.getLocalFileList()).called(1);
+    });
+  });
 
   blocTest<CollageListBloc, CollageListState>(
     'emits [CollageListLoading,CollageListLoaded] when collage list view open',
@@ -103,11 +112,27 @@ void main() {
     expect: () => <CollageListState>[CollageListLoading(), CollageListLoaded(imagePdfFiles: imagePdfFiles)],
   );
 
-  group('Return file', () {
-    test('Return file from the Storage Service', () async {
+  blocTest<CollageListBloc, CollageListState>(
+    'emits [CollageListLoading,CollageListLoaded] when collage file deleted',
+    build: () => CollageListBloc(mockStorageRepository),
+    act: ((bloc) {
+      when(() => mockStorageService.deleteFile(file)).thenAnswer((invocation) async => 1);
+      bloc.add(CollageListDeleteEvent(file));
       when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
-      await mockStorageService.getLocalFileList();
-      verify(() => mockStorageService.getLocalFileList()).called(3);
-    });
-  });
+    }),
+    expect: () =>
+        <CollageListState>[CollageListLoading(), CollageListDeleted(), CollageListLoaded(imagePdfFiles: imagePdfFiles)],
+  );
+
+  blocTest<CollageListBloc, CollageListState>(
+    'emits [CollageListLoading,CollageListError] when collage file deleted',
+    build: () => CollageListBloc(mockStorageRepository),
+    act: ((bloc) {
+      when(() => mockStorageService.deleteFile(file)).thenAnswer((invocation) async => 0);
+      bloc.add(CollageListDeleteEvent(file));
+      // when(() => mockStorageService.getLocalFileList()).thenAnswer((invocation) async => imagePdfFiles);
+    }),
+    expect: () =>
+        <CollageListState>[CollageListLoading(), const CollageListError(ApplicationConstants.deleteFileError)],
+  );
 }

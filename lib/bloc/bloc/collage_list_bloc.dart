@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_collage/constants/application_constants.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../repository/storage_repository.dart';
@@ -31,6 +32,8 @@ class CollageListBloc extends Bloc<CollageListEvent, CollageListState> {
         if (result == 1) {
           emit(CollageListDeleted());
           emit(CollageListLoaded(imagePdfFiles: await storageRepository.getLocalFileList()));
+        } else {
+          emit(CollageListError(ApplicationConstants.deleteFileError.toString()));
         }
       } catch (e) {
         emit(CollageListError(e.toString()));

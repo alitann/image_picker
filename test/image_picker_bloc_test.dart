@@ -7,9 +7,11 @@ import 'package:image_collage/model/collage_image.dart';
 class MockImagePickerBloc extends MockBloc<ImagePickerEvent, ImagePickerState> implements ImagePickerBloc {}
 
 void main() {
+  setUpAll(() {});
+
   final images = [CollageImage(path: 'fakePath')];
 
-  group('MockImagePickerBloc Listen', () {
+  group('MockImagePickerBloc Listen with stream', () {
     test("Mock the MockImagePickerBloc's stream!", () {
       final bloc = MockImagePickerBloc();
       whenListen(bloc, Stream.fromIterable([ImagePickerLoadingState(), ImagePickerLoadedState(images)]));
@@ -35,7 +37,7 @@ void main() {
     'emits [ImagePickerLoadedState] when Image was selected from gallery or camera',
     build: () => ImagePickerBloc(),
     act: (bloc) => bloc.add(ImagePickerSelectEvent(images: images)),
-    expect: () => <ImagePickerState>[ImagePickerLoadedState(images)],
+    expect: () => <ImagePickerState>[ImagePickerLoadingState(), ImagePickerLoadedState(images)],
   );
 
   blocTest<ImagePickerBloc, ImagePickerState>(

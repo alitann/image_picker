@@ -135,10 +135,9 @@ class _CreateCollageViewState extends State<CreateCollageView> {
         mainAxisSpacing: 10,
         crossAxisCount: 3,
         onReorder: (oldIndex, newIndex) {
-          setState(() {
-            final element = imageList.removeAt(oldIndex);
-            imageList.insert(newIndex, element);
-          });
+          final element = imageList.removeAt(oldIndex);
+          imageList.insert(newIndex, element);
+          imagePickerBloc?.add(ImagePickerSelectEvent(images: imageList));
         },
         children: imageList.map((e) => _imageCard(state, imageList.indexOf(e))).toList(),
       ),

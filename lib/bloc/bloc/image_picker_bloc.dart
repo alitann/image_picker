@@ -10,6 +10,8 @@ class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
   ImagePickerBloc() : super(ImagePickerInitialState()) {
     on<ImagePickerSelectEvent>((event, emit) {
       try {
+        emit(ImagePickerLoadingState());
+
         emit(ImagePickerLoadedState(event.images));
       } catch (e) {
         emit(ImagePickerErrorState(e.toString()));

@@ -17,6 +17,7 @@ class ApplicationConstants {
   static const String cancel = 'Cancel';
   static const String minImageError = 'Please select 1 image at least';
   static const String blocTestError = 'Error on bloc';
+  static const String deleteFileError = 'Selected file could not be deleted.';
   static const String pdfFileCreatedInfoMessage = 'Collage pdf file has been created.';
   static const String pdfFileDeletedInfoMessage = 'Collage pdf file has been deleted.';
   static const String imageQualityTitle = 'Image Quality';

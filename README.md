@@ -25,7 +25,7 @@ The application has property of
 - Generating  pdf file with selected images. 
 - Setting images quality.
 - Reordering selected images. 
-- Showing detail page of created pdf file an listing. 
+- Showing detail page of created pdf file and listing. 
 - Showing created pdf file with collage images. 
 - Pdf file sharing.
 - Deleting existing pdf files on the application storage.   
