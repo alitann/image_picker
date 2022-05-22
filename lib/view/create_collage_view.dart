@@ -88,13 +88,16 @@ class _CreateCollageViewState extends State<CreateCollageView> {
         } else if (state is ImagePickerErrorState) {
           return handleImagePickerErrorState(state);
         } else if (state is ImagePickerQualityState) {
-          imageQuality = state.imageQuality;
-          imagePickerBloc?.add(ImagePickerResetEvent());
+          handleImagePickerQualityState(state);
         }
-
         return handleImageInitialState();
       },
     );
+  }
+
+  void handleImagePickerQualityState(ImagePickerQualityState state) {
+    imageQuality = state.imageQuality;
+    imagePickerBloc?.add(ImagePickerResetEvent());
   }
 
   Center handleImageInitialState() {
