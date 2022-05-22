@@ -18,36 +18,7 @@ void main() {
       expectLater(
           bloc.stream, emitsInOrder(<ImagePickerState>[ImagePickerLoadingState(), ImagePickerLoadedState(images)]));
     });
-  });
 
-  blocTest<ImagePickerBloc, ImagePickerState>(
-    'emits [] when nothing is added',
-    build: () => ImagePickerBloc(),
-    expect: () => const [],
-  );
-
-  blocTest<ImagePickerBloc, ImagePickerState>(
-    'emits [ImagePickerLoadingState] when ImagePicker button pressed',
-    build: () => ImagePickerBloc(),
-    act: (bloc) => bloc.add(ImagePickerLoadingEvent()),
-    expect: () => <ImagePickerState>[ImagePickerLoadingState()],
-  );
-
-  blocTest<ImagePickerBloc, ImagePickerState>(
-    'emits [ImagePickerLoadedState] when Image was selected from gallery or camera',
-    build: () => ImagePickerBloc(),
-    act: (bloc) => bloc.add(ImagePickerSelectEvent(images: images)),
-    expect: () => <ImagePickerState>[ImagePickerLoadingState(), ImagePickerLoadedState(images)],
-  );
-
-  blocTest<ImagePickerBloc, ImagePickerState>(
-    'emits [ImagePickerInitialState] when reset button was pressed',
-    build: () => ImagePickerBloc(),
-    act: (bloc) => bloc.add(ImagePickerResetEvent()),
-    expect: () => <ImagePickerState>[ImagePickerInitialState()],
-  );
-
-  group('ImagePickerBloc Listen', () {
     test("Mock the MockImagePickerBloc's stream!", () {
       final bloc = MockImagePickerBloc();
       whenListen(
@@ -69,5 +40,48 @@ void main() {
             ImagePickerErrorState(ApplicationConstants.blocTestError)
           ]));
     });
+  });
+
+  group('ImagePickerBloc events and states mnitoring', () {
+    blocTest<ImagePickerBloc, ImagePickerState>(
+      'emits [] when nothing is added',
+      build: () => ImagePickerBloc(),
+      expect: () => const [],
+    );
+
+    blocTest<ImagePickerBloc, ImagePickerState>(
+      'emits [ImagePickerLoadingState] when ImagePicker button pressed',
+      build: () => ImagePickerBloc(),
+      act: (bloc) => bloc.add(ImagePickerLoadingEvent()),
+      expect: () => <ImagePickerState>[ImagePickerLoadingState()],
+    );
+
+    blocTest<ImagePickerBloc, ImagePickerState>(
+      'emits [ImagePickerLoadedState] when Image was selected from gallery or camera',
+      build: () => ImagePickerBloc(),
+      act: (bloc) => bloc.add(ImagePickerSelectEvent(images: images)),
+      expect: () => <ImagePickerState>[ImagePickerLoadingState(), ImagePickerLoadedState(images)],
+    );
+
+    blocTest<ImagePickerBloc, ImagePickerState>(
+      'emits [ImagePickerInitialState] when reset button was pressed',
+      build: () => ImagePickerBloc(),
+      act: (bloc) => bloc.add(ImagePickerResetEvent()),
+      expect: () => <ImagePickerState>[ImagePickerInitialState()],
+    );
+
+    blocTest<ImagePickerBloc, ImagePickerState>(
+      'emits [ImagePickerInitialState] when reset button was pressed',
+      build: () => ImagePickerBloc(),
+      act: (bloc) => bloc.add(ImagePickerResetEvent()),
+      expect: () => <ImagePickerState>[ImagePickerInitialState()],
+    );
+
+    blocTest<ImagePickerBloc, ImagePickerState>(
+      'emits [ImagePickerInitialState] when reset button was pressed',
+      build: () => ImagePickerBloc(),
+      act: (bloc) => bloc.add(const ImagePickerSetQualityEvent(50)),
+      expect: () => <ImagePickerState>[ImagePickerQualityState(50)],
+    );
   });
 }
