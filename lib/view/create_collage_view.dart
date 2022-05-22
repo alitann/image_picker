@@ -211,8 +211,6 @@ class _CreateCollageViewState extends State<CreateCollageView> {
   void _resetView() {
     pdfFileBloc?.add(PdfFileResetRequest());
     imagePickerBloc?.add(const ImagePickerSetQualityEvent((imgQuality)));
-    // imagePickerBloc?.add(ImagePickerResetEvent());
-
     imageList = [];
   }
 

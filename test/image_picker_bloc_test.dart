@@ -42,7 +42,7 @@ void main() {
     });
   });
 
-  group('ImagePickerBloc events and states mnitoring', () {
+  group('ImagePickerBloc events and states monitoring', () {
     blocTest<ImagePickerBloc, ImagePickerState>(
       'emits [] when nothing is added',
       build: () => ImagePickerBloc(),
@@ -81,7 +81,7 @@ void main() {
       'emits [ImagePickerInitialState] when reset button was pressed',
       build: () => ImagePickerBloc(),
       act: (bloc) => bloc.add(const ImagePickerSetQualityEvent(50)),
-      expect: () => <ImagePickerState>[ImagePickerQualityState(50)],
+      expect: () => <ImagePickerState>[ImagePickerInitialState(), ImagePickerQualityState(50)],
     );
   });
 }
