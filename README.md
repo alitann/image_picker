@@ -19,16 +19,18 @@ Also we are going to use repository pattern for testable and easily maintaible c
 
 ## Description
 
-The application has property of 
+Features of the application 
 
-- Taking images from your phone's storage or camera.    
-- Generating  pdf file with selected images. 
-- Setting images quality.
-- Reordering selected images. 
-- Showing detail page of created pdf file and listing. 
-- Showing created pdf file with collage images. 
-- Pdf file sharing.
-- Deleting existing pdf files on the application storage.   
+- Load multiple images from the gallery.
+- Load the image from the camera. 
+- Reorder selected images before creating a collage. 
+- Set image quality before selecting images. 
+- Reset the page to reselect the images.
+- Showing warning if collage created or get failed. 
+- List pdf files on the my list page. 
+- Show the pdf collage file from the list. 
+- Share the pdf file from the list. 
+- Delete the pdf file from the list. 
 - Using bloc and repository pattern.
 
 ## Setup
