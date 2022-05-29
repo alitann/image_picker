@@ -51,12 +51,35 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     );
   }
 
-  FloatingActionButton _buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton.extended(
-      label: const Text(ApplicationConstants.createCollage),
-      icon: const Icon(Icons.download_done_outlined),
-      onPressed: () async {
-        pdfFileBloc?.add(PdfFileCreateRequest(imageList, context));
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text(ApplicationConstants.createCollage),
+      actions: [_buildAppBarActionReset(context), _buildAppBarActionCreate(context)],
+    );
+  }
+
+  Widget _buildAppBarActionReset(BuildContext context) {
+    return IconButton(
+        onPressed: (() {
+          _resetView();
+        }),
+        icon: const Icon(Icons.refresh_outlined));
+  }
+
+  Widget _buildAppBarActionCreate(BuildContext context) {
+    return BlocConsumer<PdfFileBloc, PdfFileState>(
+      listener: (context, state) {
+        if (state is PdfFileCreated) {
+          CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileCreatedInfoMessage);
+        }
+      },
+      builder: (context, state) {
+        return IconButton(
+            onPressed: (() {
+              pdfFileBloc?.add(PdfFileResetRequest());
+              showImageSourceActionSheet(context);
+            }),
+            icon: const Icon(Icons.add_photo_alternate_outlined));
       },
     );
   }
@@ -208,43 +231,20 @@ class _CreateCollageViewState extends State<CreateCollageView> {
     ));
   }
 
+  FloatingActionButton _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton.extended(
+      label: const Text(ApplicationConstants.createCollage),
+      icon: const Icon(Icons.download_done_outlined),
+      onPressed: () async {
+        pdfFileBloc?.add(PdfFileCreateRequest(imageList, context));
+      },
+    );
+  }
+
   void _resetView() {
     pdfFileBloc?.add(PdfFileResetRequest());
     imagePickerBloc?.add(const ImagePickerSetQualityEvent((imgQuality)));
     imageList = [];
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text(ApplicationConstants.createCollage),
-      actions: [_buildAppBarActionReset(context), _buildAppBarActionCreate(context)],
-    );
-  }
-
-  Widget _buildAppBarActionReset(BuildContext context) {
-    return IconButton(
-        onPressed: (() {
-          _resetView();
-        }),
-        icon: const Icon(Icons.refresh_outlined));
-  }
-
-  Widget _buildAppBarActionCreate(BuildContext context) {
-    return BlocConsumer<PdfFileBloc, PdfFileState>(
-      listener: (context, state) {
-        if (state is PdfFileCreated) {
-          CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileCreatedInfoMessage);
-        }
-      },
-      builder: (context, state) {
-        return IconButton(
-            onPressed: (() {
-              pdfFileBloc?.add(PdfFileResetRequest());
-              showImageSourceActionSheet(context);
-            }),
-            icon: const Icon(Icons.add_photo_alternate_outlined));
-      },
-    );
   }
 
   Future<List<XFile?>>? getImageFromGallery() async {

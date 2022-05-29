@@ -34,6 +34,23 @@ class _ListCollageViewState extends State<ListCollageView> {
     );
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: BlocConsumer<CollageListBloc, CollageListState>(
+        listener: (context, state) {
+          if (state is CollageListDeleted) {
+            CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileDeletedInfoMessage);
+          } else if (state is CollageListError) {
+            CommonSnackbar.buildSnackbar(context, state.errorMessage);
+          }
+        },
+        builder: (context, state) {
+          return const Text(ApplicationConstants.collageList);
+        },
+      ),
+    );
+  }
+
   Padding _buildBody() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -43,17 +60,20 @@ class _ListCollageViewState extends State<ListCollageView> {
             return _handleCollageListLoading();
           } else if (state is CollageListLoaded) {
             return _buildListView(state);
+          } else if (state is CollageListError) {
+            return _handleCollageListError(state);
           }
-
           return _doNothing();
         },
       ),
     );
   }
 
-  SizedBox _doNothing() => const SizedBox.shrink();
-
   Center _handleCollageListLoading() => const Center(child: CircularProgressIndicator());
+
+  Center _handleCollageListError(CollageListError state) => Center(child: Text(state.errorMessage));
+
+  SizedBox _doNothing() => const SizedBox.shrink();
 
   ListView _buildListView(CollageListLoaded state) {
     return ListView.builder(
@@ -89,33 +109,16 @@ class _ListCollageViewState extends State<ListCollageView> {
         const SizedBox(width: 20),
         InkWell(
             child: const Icon(Icons.share_outlined),
-            onTap: () async {
+            onTap: () {
               Share.shareFiles([pdfFile.path], text: ApplicationConstants.shareDescription);
             }),
         const SizedBox(width: 20),
         InkWell(
             child: const Icon(Icons.delete_forever_outlined),
-            onTap: () async {
+            onTap: () {
               _showConfirmationDialog(pdfFile, context);
             })
       ],
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: BlocConsumer<CollageListBloc, CollageListState>(
-        listener: (context, state) {
-          if (state is CollageListDeleted) {
-            CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileDeletedInfoMessage);
-          } else if (state is CollageListError) {
-            CommonSnackbar.buildSnackbar(context, state.errorMessage);
-          }
-        },
-        builder: (context, state) {
-          return const Text(ApplicationConstants.collageList);
-        },
-      ),
     );
   }
 
