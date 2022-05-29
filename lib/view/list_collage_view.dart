@@ -109,7 +109,7 @@ class _ListCollageViewState extends State<ListCollageView> {
           if (state is CollageListDeleted) {
             CommonSnackbar.buildSnackbar(context, ApplicationConstants.pdfFileDeletedInfoMessage);
           } else if (state is CollageListError) {
-            CommonSnackbar.buildSnackbar(context, state.errorMessage.toString());
+            CommonSnackbar.buildSnackbar(context, state.errorMessage);
           }
         },
         builder: (context, state) {

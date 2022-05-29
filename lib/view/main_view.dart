@@ -23,13 +23,14 @@ class TabBarController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomNavigationBloc = context.read<BottomNavigationBloc>();
+    final List<Widget> tabBarViewList = [const CreateCollageView(), const ListCollageView()];
 
     return DefaultTabController(
-      length: 2,
+      length: tabBarViewList.length,
       child: BlocBuilder<BottomNavigationBloc, int>(
         builder: (context, selectedIndex) {
           return Scaffold(
-            body: bottomNavigationBloc.state == 0 ? const CreateCollageView() : const ListCollageView(),
+            body: tabBarViewList[bottomNavigationBloc.state],
             bottomNavigationBar: _customNavigationBar(selectedIndex, bottomNavigationBloc),
           );
         },
